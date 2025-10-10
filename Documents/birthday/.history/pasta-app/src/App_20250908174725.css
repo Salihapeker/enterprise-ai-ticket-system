@@ -1,0 +1,202 @@
+.app {
+  text-align: center;
+  font-family: "Arial", sans-serif;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: background 1s ease, color 1s ease;
+}
+
+.app.dark-mode {
+  background: #000000; /* Siyah arka plan (karanlık mod) */
+  color: #ffffff;
+}
+
+.app.light-mode {
+  background: linear-gradient(
+    to bottom,
+    #ffffff,
+    #f0f0f0
+  ); /* Beyaz/açık gri arka plan */
+  color: #000000;
+}
+
+h1 {
+  color: inherit;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.instructions {
+  margin-bottom: 2rem;
+}
+
+.instruction-text {
+  font-size: 1.6rem;
+  color: inherit;
+  margin-bottom: 1rem;
+  animation: fadeIn 1s ease;
+}
+
+.start-btn,
+.reset-btn {
+  background: #000000;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  margin: 1rem 0;
+  transition: transform 0.2s, background 0.5s;
+}
+
+.start-btn:hover,
+.reset-btn:hover {
+  transform: scale(1.05);
+  background: #333333;
+}
+
+.cake-container {
+  position: relative;
+  display: inline-block;
+  width: 300px;
+  height: 200px;
+  cursor: pointer;
+  margin-top: 5rem; /* Pastayı aşağıda tutarak butonlarla çakışmayı önledim */
+  opacity: 0;
+  transform: scale(0.5) translateY(100px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.cake-container.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.cake-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.bottom-layer {
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: #ff0000; /* Kırmızı katman */
+}
+
+.middle-layer {
+  bottom: 60px;
+  width: 80%;
+  height: 50px;
+  left: 10%;
+  background: #ff4d4d;
+}
+
+.top-layer {
+  bottom: 110px;
+  width: 60%;
+  height: 40px;
+  left: 20%;
+  background: #ff6666;
+}
+
+.candle {
+  width: 10px;
+  height: 50px;
+  background: linear-gradient(to bottom, #ffffff, #cccccc);
+  position: absolute;
+  top: -70px; /* Mumları pastanın üstüne yerleştirdim */
+  border-radius: 5px 5px 0 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.candle.lit::after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 15px;
+  background: radial-gradient(circle, #ffeb3b, #ff5722, #ffeb3b);
+  position: absolute;
+  top: -15px;
+  left: 1px;
+  border-radius: 50%;
+  animation: flicker 0.3s infinite alternate, glow 1s infinite alternate;
+  filter: blur(2px);
+  box-shadow: 0 0 10px 5px rgba(255, 165, 0, 0.7);
+}
+
+.candle.blown {
+  opacity: 0;
+  transform: translateY(-20px) rotate(10deg);
+}
+
+@keyframes flicker {
+  0% {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1) translateX(1px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) translateX(-1px);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px 2px rgba(255, 165, 0, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 15px 7px rgba(255, 165, 0, 0.8);
+  }
+}
+
+.smoke {
+  position: absolute;
+  top: -80px;
+  width: 20px;
+  height: 20px;
+  background: rgba(200, 200, 200, 0.5);
+  border-radius: 50%;
+  animation: smokeRise 2s ease-out forwards;
+}
+
+@keyframes smokeRise {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px) scale(1.5);
+  }
+}
+
+.message {
+  margin-top: 2rem;
+  font-size: 1.8rem;
+  color: inherit;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

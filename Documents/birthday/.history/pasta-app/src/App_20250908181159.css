@@ -1,0 +1,486 @@
+.app {
+  text-align: center;
+  font-family: "Arial", sans-serif;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden; /* Arka plan yıldızları taşmasın */
+  transition: background 1s ease, color 1s ease;
+}
+
+.app.dark-mode {
+  background: linear-gradient(
+    135deg,
+    #000000,
+    #1a1a1a,
+    #000000
+  ); /* Beşiktaş teması */
+  color: #ffffff;
+}
+
+.app.light-mode {
+  background: linear-gradient(
+    45deg,
+    #000000,
+    #ff0000,
+    #000000
+  ); /* Kutlama teması */
+  color: #ffffff;
+}
+
+.stars-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: transparent;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.stars-background::before,
+.stars-background::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+  animation: twinkle 3s infinite alternate;
+}
+
+.stars-background::before {
+  top: 20%;
+  left: 30%;
+  animation-delay: 0.5s;
+}
+
+.stars-background::after {
+  top: 60%;
+  left: 70%;
+  animation-delay: 1.5s;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Karşılama Ekranı */
+.welcome-phase {
+  animation: fadeIn 1s ease;
+}
+
+.besiktas-logo {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 3rem;
+  opacity: 0.9;
+  color: #ffd700;
+}
+
+/* Dilek Tutma Ekranı */
+.wish-phase {
+  animation: fadeIn 1s ease;
+}
+
+.wish-instruction {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #ffd700;
+}
+
+.countdown-container {
+  margin: 3rem 0;
+}
+
+.countdown-number {
+  font-size: 6rem;
+  color: #ff0000;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+  animation: countdown-pulse 1s infinite;
+}
+
+.countdown-done {
+  font-size: 2rem;
+  color: #ffd700;
+  animation: sparkle 1s infinite;
+}
+
+@keyframes countdown-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    color: #ffffff;
+  }
+}
+
+/* Kutlama */
+.celebration-title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  animation: pulse 2s infinite;
+  text-shadow: 3px 3px 6px rgba(255, 0, 0, 0.7);
+}
+
+.celebration-messages {
+  margin: 2rem 0;
+}
+
+.celebration-messages .message {
+  margin: 1rem 0;
+  font-size: 1.4rem;
+  opacity: 0;
+  animation: slideIn 0.8s ease forwards;
+}
+
+.celebration-messages .message:nth-child(1) {
+  animation-delay: 0.5s;
+}
+.celebration-messages .message:nth-child(2) {
+  animation-delay: 1s;
+}
+.celebration-messages .message:nth-child(3) {
+  animation-delay: 1.5s;
+}
+
+.bjk-chant {
+  font-size: 1.6rem;
+  margin: 2rem 0;
+  color: #ffd700;
+  animation: bounce 1s infinite;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Genel Başlıklar */
+h1 {
+  color: inherit;
+  font-size: 2.5rem;
+  margin-bottom: 10rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Loş ışıkta hafif parlama */
+}
+
+/* Üfleme Talimatı */
+.blow-instruction {
+  font-size: 1.3rem;
+  color: #ffd700;
+  animation: pulse 1.5s infinite;
+  margin: 2rem 0;
+}
+
+/* Butonlar */
+.start-btn,
+.reset-btn {
+  background: linear-gradient(45deg, #ff0000, #000000);
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  margin: 2rem 0; /* Butonları daha aşağı kaydırdım */
+  transition: transform 0.2s, background 0.5s;
+  z-index: 10; /* Mumların üstünde kalsın */
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+}
+
+.start-btn:hover,
+.reset-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #cc0000, #333333);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
+}
+
+/* Pasta */
+.cake-container {
+  position: relative;
+  display: inline-block;
+  width: 350px;
+  height: 200px;
+  cursor: pointer;
+  margin-top: 3rem; /* Pastayı daha aşağı kaydırdım */
+  z-index: 5; /* Butonların altında kalsın */
+}
+
+.cake-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-radius: 15px 15px 0 0;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.bottom-layer {
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+  background: linear-gradient(
+    45deg,
+    #000000,
+    #1a1a1a,
+    #000000
+  ); /* Beşiktaş siyahı */
+  border: 3px solid white;
+  animation: cake-glow 3s ease-in-out infinite;
+}
+
+.middle-layer {
+  bottom: 70px;
+  width: 80%;
+  height: 60px;
+  left: 10%;
+  background: linear-gradient(
+    to bottom,
+    #ff0000,
+    #cc0000
+  ); /* Beşiktaş kırmızısı */
+  border: 2px solid white;
+}
+
+.top-layer {
+  bottom: 130px;
+  width: 60%;
+  height: 50px;
+  left: 20%;
+  background: linear-gradient(to bottom, #ffffff, #f0f0f0); /* Beyaz katman */
+  border: 2px solid #ccc;
+}
+
+.cake-text {
+  position: absolute;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000000;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+  z-index: 10;
+}
+
+@keyframes cake-glow {
+  0%,
+  100% {
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(255, 0, 0, 0.6);
+  }
+}
+
+/* Mumlar */
+.candle {
+  width: 12px;
+  height: 60px;
+  background: linear-gradient(to bottom, #ffd700, #ffa500);
+  position: absolute;
+  top: -90px; /* Mumları pastanın daha üstüne çıkardım */
+  border-radius: 6px 6px 0 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 2; /* Pastanın üstünde, butonların altında */
+  border: 1px solid #ff8c00;
+}
+
+.candle.lit::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 20px;
+  background: radial-gradient(circle, #ffd700, #ff4500, #ffd700);
+  position: absolute;
+  top: -20px;
+  left: 1px;
+  border-radius: 50%;
+  animation: flicker 0.3s infinite alternate, flame-glow 2s infinite;
+  filter: blur(1px);
+  box-shadow: 0 0 20px 8px rgba(255, 165, 0, 0.8);
+}
+
+.candle.lit::before {
+  content: "";
+  position: absolute;
+  top: -35px;
+  left: -15px;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(255, 165, 0, 0.3), transparent);
+  animation: halo 2s infinite;
+}
+
+.candle.blown {
+  opacity: 0;
+  transform: translateY(-30px) rotate(15deg);
+}
+
+@keyframes flicker {
+  0% {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1) translateX(1px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) translateX(-1px);
+    opacity: 1;
+  }
+}
+
+@keyframes flame-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px 8px rgba(255, 165, 0, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 30px 12px rgba(255, 100, 0, 1);
+  }
+}
+
+@keyframes halo {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0.1;
+  }
+}
+
+/* Duman */
+.smoke {
+  position: absolute;
+  top: -100px; /* Mum pozisyonuna göre ayarladım */
+  width: 25px;
+  height: 25px;
+  background: rgba(200, 200, 200, 0.6);
+  border-radius: 50%;
+  animation: smokeRise 3s ease-out forwards;
+}
+
+@keyframes smokeRise {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(2);
+  }
+}
+
+/* Mesajlar */
+.message {
+  margin-top: 2rem;
+  font-size: 1.4rem;
+  color: inherit;
+  animation: fadeIn 1s ease;
+}
+
+/* Genel Animasyonlar */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 768px) {
+  h1,
+  .celebration-title {
+    font-size: 2rem;
+  }
+
+  .cake-container {
+    width: 280px;
+  }
+
+  .besiktas-logo {
+    font-size: 3rem;
+  }
+
+  .countdown-number {
+    font-size: 4rem;
+  }
+}
