@@ -1,0 +1,14 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Minimal defaults (Tailwind apply kullanmadan) */
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+}

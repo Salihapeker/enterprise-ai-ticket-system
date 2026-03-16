@@ -1,0 +1,85 @@
+﻿@import "tailwindcss";
+
+:root {
+  --glow: #ffd100;
+  --glow2: #0057b8;
+  --bg: #05060a;
+  --bg2: #0b1020;
+  --card: rgba(255, 255, 255, 0.06);
+  --card2: rgba(255, 255, 255, 0.1);
+  --text: #eaf0ff;
+  --muted: rgba(234, 240, 255, 0.7);
+  --stroke: rgba(255, 255, 255, 0.1);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    "Noto Sans";
+  background:
+    radial-gradient(
+      900px 600px at 15% 10%,
+      color-mix(in oklab, var(--glow) 35%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      800px 520px at 85% 15%,
+      color-mix(in oklab, var(--glow2) 30%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+}
+
+/* subtle grid overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(circle at 30% 10%, black 0%, transparent 60%);
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    "Noto Sans";
+  background:
+    radial-gradient(
+      600px 320px at 75% 0%,
+      color-mix(in oklab, var(--glow) 28%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      520px 300px at 15% 10%,
+      color-mix(in oklab, var(--glow2) 22%, transparent),
+      transparent 72%
+    ),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+}
