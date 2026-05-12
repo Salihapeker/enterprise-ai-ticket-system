@@ -1,11 +1,44 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+import logging
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="AI Analysis Service", version="0.1.0")
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+from .config import settings
+from .logging_config import setup_logging
+from .middleware import CorrelationIdMiddleware, install_log_filter
+
+setup_logging()
+install_log_filter()
+log = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    log.info("ai-service starting version=%s", settings.app_version)
+    yield
+    log.info("ai-service shutting down")
+
+
+app = FastAPI(
+    title="AI Analysis Service",
+    version=settings.app_version,
+    lifespan=lifespan,
+)
+
+app.add_middleware(CorrelationIdMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins_list,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["X-Correlation-Id"],
+)
 
 
 class AnalyzeRequest(BaseModel):
-    text: str
+    text: str = Field(..., min_length=1, max_length=4000)
 
 
 class AnalyzeResponse(BaseModel):
@@ -15,7 +48,10 @@ class AnalyzeResponse(BaseModel):
 
 def simple_urgency_score(text: str) -> float:
     t = text.lower()
-    keywords = ["acil", "kritik", "hemen", "yavaş", "iş yapamıyorum", "çöktü", "erişemiyorum"]
+    keywords = [
+        "acil", "kritik", "hemen", "yavaş", "iş yapamıyorum",
+        "çöktü", "erişemiyorum", "kesildi", "bozuk",
+    ]
     score = 0.2
     for k in keywords:
         if k in t:
@@ -33,11 +69,17 @@ def tag_from_score(score: float) -> str:
 
 
 @app.get("/health")
-def health():
-    return {"status": "ok"}
+def health() -> dict:
+    return {
+        "status": "ok",
+        "service": settings.app_name,
+        "version": settings.app_version,
+    }
 
 
 @app.post("/analyze", response_model=AnalyzeResponse)
-def analyze(req: AnalyzeRequest):
+def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
     score = simple_urgency_score(req.text)
-    return AnalyzeResponse(urgency_score=score, tag=tag_from_score(score))
+    tag = tag_from_score(score)
+    log.info("analyze textLen=%d score=%.2f tag=%s", len(req.text), score, tag)
+    return AnalyzeResponse(urgency_score=score, tag=tag)

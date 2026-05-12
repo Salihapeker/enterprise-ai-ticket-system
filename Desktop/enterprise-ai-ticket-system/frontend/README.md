@@ -1,73 +1,101 @@
-# React + TypeScript + Vite
+# Enterprise AI Ticket System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Telekom operatörleri için tasarlanmış uçtan uca AI destekli talep takip platformu.
 
-Currently, two official plugins are available:
+## Mimari
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+┌─────────────┐ ┌──────────────────┐ ┌────────────────┐
+│ Frontend │ ────▶ │ ticket-service │ ────▶ │ ai-service │
+│ React + TS │ │ Spring Boot 3 │ │ FastAPI │
+└─────────────┘ └──────────────────┘ └────────────────┘
+│ │
+(Faz 1: Postgres) (Faz 3: HF models)
 
-## React Compiler
+## Özellikler (roadmap)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [x] **Faz 0** — Altyapı (Actuator, exception handler, structured logging, resilience)
+- [ ] **Faz 1** — PostgreSQL + JPA + Flyway + pagination
+- [ ] **Faz 2** — JWT + RBAC + Spring Security
+- [ ] **Faz 3** — Gerçek NLP (Türkçe BERT + sentence embeddings + pgvector)
+- [ ] **Faz 4** — WebSocket real-time updates
+- [ ] **Faz 5** — Analytics dashboard, admin UI, ticket detay
+- [ ] **Faz 6** — CI/CD + cloud deploy
+- [ ] **Faz 7** — Kapsamlı test (JUnit, Testcontainers, Playwright)
+- [ ] **Faz 8** — Kafka, Elasticsearch, observability stack
 
-## Expanding the ESLint configuration
+## Hızlı Başlangıç
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
+make up
+make logs
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Servisler:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Frontend: http://localhost:5173
+- Ticket API: http://localhost:8082
+- AI API: http://localhost:8000
+- Health: http://localhost:8082/actuator/health
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Geliştirme
+
+Her servisi ayrı terminalde:
+
+```bash
+# Terminal 1 — AI service
+cd services/ai-analysis-service
+uvicorn app.main:app --reload --port 8000
+
+# Terminal 2 — Ticket service
+cd services/ticket-service
+./mvnw spring-boot:run
+
+# Terminal 3 — Frontend
+cd frontend
+npm run dev
 ```
+
+## API Örnekleri
+
+Ticket oluştur:
+
+```bash
+curl -X POST http://localhost:8082/tickets \
+  -H "Content-Type: application/json" \
+  -d '{"title":"İnternet kesik","description":"Hiç çalışmıyor acil!"}'
+```
+
+## Teknolojiler
+
+**Backend**
+
+- Java 17 + Spring Boot 3.5
+- Python 3.11 + FastAPI
+- (Faz 1+) PostgreSQL, Flyway, JPA
+- (Faz 2+) Spring Security, JWT
+- (Faz 3+) Hugging Face Transformers, sentence-transformers, pgvector
+
+**Frontend**
+
+- React 19 + TypeScript + Vite
+- TailwindCSS 4
+- Chart.js + react-chartjs-2
+- STOMP WebSocket client
+
+**DevOps**
+
+- Docker + Docker Compose
+- (Faz 6+) GitHub Actions, Fly.io
+
+## Dizin Yapısı
+
+.
+├── docker-compose.yml
+├── Makefile
+├── .env.example
+├── frontend/
+├── services/
+│ ├── ticket-service/ # Spring Boot
+│ └── ai-analysis-service/ # FastAPI
+└── docs/ # Faz dokümanları

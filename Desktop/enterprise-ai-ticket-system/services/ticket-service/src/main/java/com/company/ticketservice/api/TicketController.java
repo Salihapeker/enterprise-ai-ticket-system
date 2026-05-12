@@ -1,65 +1,45 @@
 package com.company.ticketservice.api;
 
-import com.company.ticketservice.ai.AiAnalyzeResponse;
-import com.company.ticketservice.ai.AiClient;
 import com.company.ticketservice.model.CreateTicketRequest;
 import com.company.ticketservice.model.Ticket;
+import com.company.ticketservice.service.TicketService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.UUID;
 
+// Controller sadece HTTP'den sorumlu: istek al, service'e ilet, yanıt döndür
 @RestController
 @RequestMapping("/tickets")
-@CrossOrigin(origins = "http://localhost:5173")
 public class TicketController {
 
-    private final AiClient aiClient;
-    private final Map<UUID, Ticket> store = new ConcurrentHashMap<>();
+    private final TicketService ticketService;
 
-    public TicketController(AiClient aiClient) {
-        this.aiClient = aiClient;
-    }
-
-    @GetMapping("/health")
-    public Map<String, String> health() {
-        return Map.of("status", "ok");
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
     @PostMapping
     public ResponseEntity<Ticket> create(@Valid @RequestBody CreateTicketRequest req) {
-        // AI'ye description gönderiyoruz
-     
-        AiAnalyzeResponse ai;
-try {
-    ai = aiClient.analyze(req.getDescription());
-} catch (Exception e) {
-    ai = new AiAnalyzeResponse();
-    ai.setUrgencyScore(0.2);
-    ai.setTag("NORMAL");
-}
-
-        UUID id = UUID.randomUUID();
-        Ticket t = new Ticket(
-                id,
-                req.getTitle(),
-                req.getDescription(),
-                ai.getUrgencyScore(),
-                ai.getTag(),
-                Instant.now()
-        );
-
-        store.put(id, t);
-        return ResponseEntity.ok(t);
+        return ResponseEntity.ok(ticketService.create(req));
     }
 
     @GetMapping
     public List<Ticket> list() {
-        return store.values().stream()
-                .sorted(Comparator.comparing(Ticket::getCreatedAt).reversed())
-                .toList();
+        return ticketService.listAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Ticket> getOne(@PathVariable UUID id) {
+        return ticketService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
